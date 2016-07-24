@@ -8,6 +8,7 @@ This repository will hold a series of apps, each demonstrating a feature(s) of a
 </li>
 <li>
 <b>GeoQuiz v1.1</b> - This version shows onClickListener in 2 forms, looping through a list of 
-ResId's with mod to display text, it also shows how to organize widgets using sub-LinearLayouts
+ResId's with mod to display text, it also shows how to organize widgets using sub-LinearLayouts,
+and how to add images to buttons.
 </li>
 </ol>
