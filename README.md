@@ -17,10 +17,10 @@ It also demonstrates how the custom horizontal layout can look different from pr
 and how its opened when the device is rotated.Finally the app also shows how to save primitive types.
 </li>
 <li>
-<b>GeoQuiz v2.0</b> - This app shows the how to call another activity which must call back when it
+<b>GeoQuiz v2.0</b> - This app displays how to call another activity which must call back when it
 leaves the stack (ie. is finished). Intent construction encapsulation is also on display inside the 
 cheat Activity. The Cheat activity builds intents for those that wish to call it and it unpacks
-intents that it has created for those that need it. Intents also includes exta data the next activity
+intents that it has created for those that need it. Intents also include exta data the next activity
 might need.
 </li>
 <li>
