@@ -23,5 +23,8 @@ cheat Activity. The Cheat activity builds intents for those that wish to call it
 intents that it has created for those that need it. Intents also includes exta data the next activity
 might need.
 </li>
-
+<li>
+<b>Criminal Intent (large on-going app)</b> - A basic app that exists to demo fragments using the support library over the built
+in fragment class. Currently, this app displays a fragment with a simple edit text widget.
+</li>
 </ol>
