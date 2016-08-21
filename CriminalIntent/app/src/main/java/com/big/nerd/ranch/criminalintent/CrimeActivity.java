@@ -12,11 +12,12 @@ import android.support.v4.app.FragmentManager;
  * To remove unused imports = ctrl + alt + o
  * To format code = ctrl + alt + L
  * To run class = ctrl +  shift + F10
+ *
+ * The Main Activity
+ * This wires up the opening activity: activity_crime.xml and starts the class that will manage the fragment: fragment_crime.xml.
  */
 public class CrimeActivity extends FragmentActivity
 {
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -25,7 +26,7 @@ public class CrimeActivity extends FragmentActivity
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);  //to retrieve the crimeFragment ask by container view id
 
-        if (fragment == null)
+        if (fragment == null)  //if fragment has never been opened or if it has, the app has since been fully closed
         {
             fragment = new CrimeFragment();
             fm.beginTransaction().add(R.id.fragment_container, fragment).commit();
