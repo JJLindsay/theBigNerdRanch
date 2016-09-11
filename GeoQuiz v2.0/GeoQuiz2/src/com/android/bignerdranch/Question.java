@@ -7,6 +7,8 @@ package com.android.bignerdranch;
  * To remove unused imports = ctrl + alt + o
  * To format code = ctrl + alt + L
  * To run class = ctrl +  shift + F10
+ *
+ * This is the controller for the Question Model
  */
 public class Question
 {

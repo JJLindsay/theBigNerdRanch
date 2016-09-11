@@ -1,15 +1,26 @@
 package com.android.bignerdranch;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
 /**
- * Created by J.Lindsay on 28.07.2016.
+ * To comment out a line = ctrl + (keypad /)
+ * To block comment = ctrl +  shift + (keypad /)
+ * To refactor = shift f6
+ * To remove unused imports = ctrl + alt + o
+ * To format code = ctrl + alt + L
+ * To run class = ctrl +  shift + F10
+ *
+ * This is a sub-Activity triggered by the Main Activity: QuizActivity.java
  */
 public class CheatActivity extends Activity
 {
@@ -28,7 +39,7 @@ public class CheatActivity extends Activity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cheat);
+        setContentView(R.layout.activity_cheat);  //sets the view you will use and reference in this class
 
         if (savedInstanceState != null)
             if (savedInstanceState.getBoolean(BUNDLE_KEY_CHEATER, false))
@@ -42,7 +53,7 @@ public class CheatActivity extends Activity
         mShowAnswer.setOnClickListener(new ShowAnswerBtnListener());
     }
 
-    //Creates intents specific to this activity, even Context could be removed and made fixed like CheatActivity.class
+    //Creates intents specific to this activity. nextActivityPackage could be static in this case
     public static Intent newIntent(Context nextActivityPackage, boolean correctAnswer)
     {
         //the next Activity package and the java class appended with .class
@@ -64,6 +75,30 @@ public class CheatActivity extends Activity
                 mAnswerTextView.setText(R.string.false_button);
 
             setAnswer(true);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            {
+                int cx = mShowAnswer.getWidth() / 2;
+                int cy = mShowAnswer.getHeight() / 2;
+                float radius = mShowAnswer.getWidth();
+                Animator animator = ViewAnimationUtils.createCircularReveal(mAnswerTextView, cx, cy, radius, 0);
+                animator.addListener(new AnimatorListenerAdapter()
+                {
+                    @Override
+                    public void onAnimationEnd(Animator animation)
+                    {
+                        super.onAnimationEnd(animation);
+                        mAnswerTextView.setVisibility(View.VISIBLE);
+                        mShowAnswer.setVisibility(View.VISIBLE);
+                    }
+                });
+                animator.start();
+            }
+            else
+            {
+                mAnswerTextView.setVisibility(View.VISIBLE);
+                mShowAnswer.setVisibility(View.VISIBLE);
+            }
         }
     }
 

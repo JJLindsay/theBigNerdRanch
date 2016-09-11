@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,13 +58,13 @@ public class CrimeFragment extends Fragment
         View fragmentCrimeView = inflater.inflate(R.layout.fragment_crime, container, false);  //false for add the view to the parent. This will be done in code (in Activity) so false.
 
         mTitleField = (EditText) fragmentCrimeView.findViewById(R.id.crime_title);
-        mTitleField.addTextChangedListener(new TextChangedListener());
-
         mDateButton = (Button) fragmentCrimeView.findViewById(R.id.crime_date);
+        mSolvedCheckBox = (CheckBox) fragmentCrimeView.findViewById(R.id.crime_solved);
+
         mDateButton.setText(mCrime.getDate().toString());
         mDateButton.setEnabled(false);
 
-        mSolvedCheckBox = (CheckBox) fragmentCrimeView.findViewById(R.id.crime_solved);
+        mTitleField.addTextChangedListener(new TextChangedListener());
         mSolvedCheckBox.setOnCheckedChangeListener(new CheckBoxChangedListener());
 
         return fragmentCrimeView;

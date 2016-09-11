@@ -16,6 +16,8 @@ import android.widget.Toast;
  * To remove unused imports = ctrl + alt + o
  * To format code = ctrl + alt + L
  * To run class = ctrl +  shift + F10
+ *
+ * The main Activity
  */
 public class QuizActivity extends Activity
 {
