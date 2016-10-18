@@ -25,7 +25,7 @@ This repository will hold a series of apps, each demonstrating a feature(s) of a
 </li>
 <li>
 	<b>Criminal Intent (work on-going...)</b>
-	<br/>- update v1.2 - This app expands on v1.0 by expanding into to the use of viewHolder, RecyclerView,
+	<br/>- update v1.2 - This app expands on v1.1 by expanding into to the use of viewHolder, RecyclerView,
 	a generic reusable fragment.
 	<br/>- update v1.1 - This app expands on v1.0 by wiring up the widgets in the fragment and adding
 	logs to see changes to textbox and checkbox as it happens. Activity is arranged differently in land
