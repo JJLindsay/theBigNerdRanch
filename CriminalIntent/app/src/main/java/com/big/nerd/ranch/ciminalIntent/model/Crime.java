@@ -1,11 +1,10 @@
-package com.big.nerd.ranch.criminalintent;
+package com.big.nerd.ranch.ciminalIntent.model;
 
 
 
 import android.text.format.DateFormat;
 
 import java.util.Date;
-import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -15,6 +14,8 @@ import java.util.UUID;
  * To remove unused imports = ctrl + alt + o
  * To format code = ctrl + alt + L
  * To run class = ctrl +  shift + F10
+ *
+ * This defines what a crime is.
  */
 public class Crime
 {
@@ -47,13 +48,12 @@ public class Crime
 
     public String getDate()
     {
-//        return mDate;
         return mDateFormat;
     }
 
     public void setDate(Date date)
     {
-//        mDate = date;
+        mDateFormat = DateFormat.format("EEEE, MMM dd, yyyy", date).toString();
     }
 
     public boolean isSolved()

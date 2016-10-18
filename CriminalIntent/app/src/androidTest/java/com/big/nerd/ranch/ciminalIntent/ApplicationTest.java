@@ -1,4 +1,4 @@
-package com.big.nerd.ranch.criminalintent;
+package com.big.nerd.ranch.ciminalIntent;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

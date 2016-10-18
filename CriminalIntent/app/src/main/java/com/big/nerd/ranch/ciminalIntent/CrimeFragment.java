@@ -1,11 +1,10 @@
-package com.big.nerd.ranch.criminalintent;
+package com.big.nerd.ranch.ciminalIntent;
 
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import com.big.nerd.ranch.ciminalIntent.model.Crime;
 
 /**
  * To comment out a line = ctrl + (keypad /)
@@ -23,15 +23,15 @@ import android.widget.EditText;
  * To format code = ctrl + alt + L
  * To run class = ctrl +  shift + F10
  *
- * This wires up the fragment: fragment_crime.xml which will be displayed on the main activity: activity_crime.xml. The
+ * This wires up the fragment: fragment_crime.xml which will be displayed on the main activity: activity_fragment.xml. The
  * fragment will be placed inside the view through code instead of xml to make swapping in and out fragments possible.
- * This class also acts as teh controller that interacts with model (the crime) and view (the xml) objects.
+ * This class also acts as the controller that interacts with model (the crime) and view (the xml) objects.
  *
  * Presents the details of a crime and updates the details as the user changes them.
  */
 public class CrimeFragment extends Fragment
 {
-    private static final String LOG_TAG = "CrimeFragment";
+    private static final String LOG_TAG = CrimeFragment.class.getSimpleName();
     private Crime mCrime;
     private EditText mTitleField;
     private Button mDateButton;
@@ -41,15 +41,16 @@ public class CrimeFragment extends Fragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        //Create a crime object
         mCrime = new Crime();
     }
 
     /**
      * This is where the wiring that normally happens in onCreate(...) for Activity takes place
      *
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
+     * @param inflater The layout to be inflated
+     * @param container Holds the view which here is a single displayed crime
+     * @param savedInstanceState holds any keys that have been saved from previous runs
      * @return
      */
     @Override
@@ -75,20 +76,22 @@ public class CrimeFragment extends Fragment
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after)
         {
-            //blank for now
+            //TODO
+            Log.d(LOG_TAG, "Before text has changed state.");
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count)
         {
             mCrime.setTitle(s.toString());
-            Log.d(LOG_TAG, "Text changed state.");
+            Log.d(LOG_TAG, "Text has changed state.");
         }
 
         @Override
         public void afterTextChanged(Editable editable)
         {
             //TODO
+            Log.d(LOG_TAG, "After text has changed state.");
         }
     }
 
