@@ -25,6 +25,9 @@ This repository will hold a series of apps, each demonstrating a feature(s) of a
 </li>
 <li>
 	<b>Criminal Intent (work on-going...)</b>
+	<br/>- update v1.3 - This app is now in a pre-alpha testable state to demonstate the functionality of ViewHolder, 
+	RecyclerView, and fragments. The comments have also been updated to provide more clarity on how it all works. The next
+	update will improve the crime class and remove the loop to create crimes and allow the user to create only what they need.
 	<br/>- update v1.2 - This app expands on v1.1 by expanding into to the use of viewHolder, RecyclerView,
 	a generic reusable fragment.
 	<br/>- update v1.1 - This app expands on v1.0 by wiring up the widgets in the fragment and adding
