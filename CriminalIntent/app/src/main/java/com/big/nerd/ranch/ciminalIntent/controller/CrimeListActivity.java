@@ -11,7 +11,9 @@ import com.big.nerd.ranch.ciminalIntent.SingleFragmentActivity;
  * To format code = ctrl + alt + L
  * To run class = ctrl +  shift + F10
  *
+ * Sets a fragment in the empty xml.
  *
+ * I need an activity with space for a Fragment. My fragment is a list of crimes fragment
  */
 public class CrimeListActivity extends SingleFragmentActivity
 {

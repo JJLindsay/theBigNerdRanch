@@ -37,6 +37,11 @@ public class CrimeFragment extends Fragment
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
 
+    /**
+     * In order to display the view, we need a ensure we have a crime object first.
+     * This method is used for preliminary setup before we can work with the view.
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {

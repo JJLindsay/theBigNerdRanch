@@ -14,7 +14,9 @@ import android.support.v4.app.Fragment;
  * This class inherits onCreate(...) and if a fragment has not been created,
  * onCreate() will call createFragment() to place set your fragment of choice in the generic fragment xml.
  *
- * Sets a fragment in the generic activity_fragment.xml.
+ * Sets a fragment in the empty xml.
+ *
+ * I need an activity with space for a fragment. My fragment is a detailed crime fragment.
  */
 public class CrimeActivity extends SingleFragmentActivity
 {

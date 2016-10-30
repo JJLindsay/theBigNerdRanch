@@ -14,7 +14,7 @@ import java.util.UUID;
  * To format code = ctrl + alt + L
  * To run class = ctrl +  shift + F10
  *
- * Store list of crimes in a singleton.
+ * Stores a list of crimes in a singleton.
  * Temporary: Creating list using a loop
  */
 public class CrimeLab
