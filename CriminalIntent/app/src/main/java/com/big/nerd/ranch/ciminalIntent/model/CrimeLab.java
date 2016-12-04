@@ -15,29 +15,28 @@ import java.util.UUID;
  * To run class = ctrl +  shift + F10
  *
  * Stores a list of crimes in a singleton.
- * Temporary: Creating list using a loop
+ * TODO: Remove creating list using a loop
  */
 public class CrimeLab
 {
     private static CrimeLab sCrimeLab;
-
-    private List<Crime> mCrimes;
-
-    private CrimeLab(Context context){
-        mCrimes = new ArrayList<Crime>();
-        for (int i = 0; i < 100; i++){
-            Crime crime = new Crime();
-            crime.setTitle("Crime #" + i);
-            crime.setSolved(i%2 == 0);  //every other one
-            mCrimes.add(crime);
-        }
-    }
+    private static List<Crime> sCrimes;
 
     public static CrimeLab getInstance(Context context){
         if (sCrimeLab == null){
             sCrimeLab = new CrimeLab(context);
         }
         return sCrimeLab;
+    }
+
+    private CrimeLab(Context context){
+        sCrimes = new ArrayList<Crime>();
+        for (int i = 0; i < 100; i++){
+            Crime crime = new Crime();
+            crime.setTitle("Crime #" + i);
+            crime.setSolved(i%2 == 0);  //every other one
+            sCrimes.add(crime);
+        }
     }
 
     /**
@@ -47,11 +46,16 @@ public class CrimeLab
      */
     public List<Crime> getCrimes()
     {
-        return mCrimes;
+        return sCrimes;
     }
 
-    public Crime getCrime(UUID id){
-        for (Crime crime: mCrimes)
+    /**
+     * Find a crime given the UUID
+     * @param id
+     * @return
+     */
+    public static Crime getCrime(UUID id){
+        for (Crime crime: sCrimes)
         {
             if (crime.getId().equals(id))
                 return crime;

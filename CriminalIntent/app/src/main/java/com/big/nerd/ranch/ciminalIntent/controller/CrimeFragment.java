@@ -1,6 +1,8 @@
-package com.big.nerd.ranch.ciminalIntent;
+package com.big.nerd.ranch.ciminalIntent.controller;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -13,7 +15,11 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import com.big.nerd.ranch.ciminalIntent.R;
 import com.big.nerd.ranch.ciminalIntent.model.Crime;
+import com.big.nerd.ranch.ciminalIntent.model.CrimeLab;
+
+import java.util.UUID;
 
 /**
  * To comment out a line = ctrl + (keypad /)
@@ -32,6 +38,8 @@ import com.big.nerd.ranch.ciminalIntent.model.Crime;
 public class CrimeFragment extends Fragment
 {
     private static final String LOG_TAG = CrimeFragment.class.getSimpleName();
+    private static final String ARG_CRIME_ID = "crime_id";
+    private static final String CHANGED_CRIME = "com.big.nerd.ranch.CHANGED_CRIME";
     private Crime mCrime;
     private EditText mTitleField;
     private Button mDateButton;
@@ -40,6 +48,7 @@ public class CrimeFragment extends Fragment
     /**
      * In order to display the view, we need a ensure we have a crime object first.
      * This method is used for preliminary setup before we can work with the view.
+     * NOTE: see newInstance for why not intent.getExtras(...)
      * @param savedInstanceState
      */
     @Override
@@ -47,7 +56,30 @@ public class CrimeFragment extends Fragment
     {
         super.onCreate(savedInstanceState);
         //Create a crime object
-        mCrime = new Crime();
+        // Look in the shared parent: Fragment for the Bundle and get its args
+        UUID crimeID = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
+        mCrime = CrimeLab.getCrime(crimeID);
+    }
+
+    /**
+     * Call this when ready to display a detailed Crime.
+     * This approach (over getIntent extras) allows CrimeFragment to not depend on its
+     * parent activity for the extras. This preserves encapsulation! Using the parent would mean that
+     * CrimeFragment AS WRITTEN (!) could not be used with just any activity.
+     *
+     * @param crimeID The id of the crime to be displayed.
+     * @return A Fragment object
+     */
+    public static CrimeFragment newInstance(UUID crimeID)
+    {
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_CRIME_ID, crimeID);
+
+        // This will set the argument bundle to the parent: Fragment.
+        CrimeFragment crimeFragment = new CrimeFragment();
+        crimeFragment.setArguments(args);
+
+        return crimeFragment;
     }
 
     /**
@@ -67,6 +99,8 @@ public class CrimeFragment extends Fragment
         mDateButton = (Button) fragmentCrimeView.findViewById(R.id.crime_date);
         mSolvedCheckBox = (CheckBox) fragmentCrimeView.findViewById(R.id.crime_solved);
 
+        mTitleField.setText(mCrime.getTitle());
+        mSolvedCheckBox.setChecked(mCrime.isSolved());
         mDateButton.setText(mCrime.getDate().toString());
         mDateButton.setEnabled(false);
 
@@ -76,7 +110,7 @@ public class CrimeFragment extends Fragment
         return fragmentCrimeView;
     }
 
-    class TextChangedListener implements TextWatcher
+    public class TextChangedListener implements TextWatcher
     {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after)
@@ -90,6 +124,8 @@ public class CrimeFragment extends Fragment
         {
             mCrime.setTitle(s.toString());
             Log.d(LOG_TAG, "Text has changed state.");
+
+            propertyChanged();
         }
 
         @Override
@@ -100,7 +136,7 @@ public class CrimeFragment extends Fragment
         }
     }
 
-    class CheckBoxChangedListener implements CompoundButton.OnCheckedChangeListener
+    public class CheckBoxChangedListener implements CompoundButton.OnCheckedChangeListener
     {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
@@ -108,6 +144,19 @@ public class CrimeFragment extends Fragment
             //Set the Crime's solved property
             mCrime.setSolved(isChecked);
             Log.d(LOG_TAG, "check box changed state.");
+
+            propertyChanged();
         }
+    }
+
+    /**
+     * Reports back but does not start the activity
+     */
+    private void propertyChanged()
+    {
+        //if the answer is never shown Activity.RESULT_CANCELLED is returned by default automatically
+        Intent intent = new Intent();
+        intent.putExtra(CHANGED_CRIME, mCrime.getId());
+        getActivity().setResult(Activity.RESULT_OK, intent);  //there are two standard responses: result_ok and result_cancelled. Intent optional
     }
 }

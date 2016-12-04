@@ -1,9 +1,10 @@
-package com.big.nerd.ranch.ciminalIntent;
+package com.big.nerd.ranch.ciminalIntent.common;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import com.big.nerd.ranch.ciminalIntent.R;
 
 /**
  * To comment out a line = ctrl + (keypad /)
