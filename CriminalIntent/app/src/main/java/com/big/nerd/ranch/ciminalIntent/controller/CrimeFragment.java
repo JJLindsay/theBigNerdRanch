@@ -39,7 +39,7 @@ public class CrimeFragment extends Fragment
 {
     private static final String LOG_TAG = CrimeFragment.class.getSimpleName();
     private static final String ARG_CRIME_ID = "crime_id";
-    private static final String CHANGED_CRIME = "com.big.nerd.ranch.CHANGED_CRIME";
+    public static final String ALTERED_CRIME = "com.big.nerd.ranch.ALTERED_CRIME";
     private Crime mCrime;
     private EditText mTitleField;
     private Button mDateButton;
@@ -65,7 +65,7 @@ public class CrimeFragment extends Fragment
      * Call this when ready to display a detailed Crime.
      * This approach (over getIntent extras) allows CrimeFragment to not depend on its
      * parent activity for the extras. This preserves encapsulation! Using the parent would mean that
-     * CrimeFragment AS WRITTEN (!) could not be used with just any activity.
+     * CrimeFragment AS WRITTEN could not be used with just any activity.
      *
      * @param crimeID The id of the crime to be displayed.
      * @return A Fragment object
@@ -125,7 +125,7 @@ public class CrimeFragment extends Fragment
             mCrime.setTitle(s.toString());
             Log.d(LOG_TAG, "Text has changed state.");
 
-            propertyChanged();
+            reportPropertyChanged();
         }
 
         @Override
@@ -145,18 +145,17 @@ public class CrimeFragment extends Fragment
             mCrime.setSolved(isChecked);
             Log.d(LOG_TAG, "check box changed state.");
 
-            propertyChanged();
+            reportPropertyChanged();
         }
     }
 
     /**
-     * Reports back but does not start the activity
+     * Reports back if a change has taken place on this fragment
      */
-    private void propertyChanged()
+    private void reportPropertyChanged()
     {
-        //if the answer is never shown Activity.RESULT_CANCELLED is returned by default automatically
         Intent intent = new Intent();
-        intent.putExtra(CHANGED_CRIME, mCrime.getId());
+        intent.putExtra(ALTERED_CRIME, mCrime.getId());
         getActivity().setResult(Activity.RESULT_OK, intent);  //there are two standard responses: result_ok and result_cancelled. Intent optional
     }
 }

@@ -36,8 +36,8 @@ import java.util.UUID;
 public class CrimeListFragment extends Fragment
 {
     private static final String LOG_TAG = CrimeListFragment.class.getSimpleName();
-    private static final int REQUEST_CRIME_ID = 0x00;
-    private static final String CHANGED_CRIME = "com.big.nerd.ranch.CHANGED_CRIME";
+    private static final int REQUEST_CRIME_ID = 0xA1;  //this should be known only by the recipient and it is how communication is handled.
+    private static final String CHANGED_CRIME = "com.big.nerd.ranch.CRIME_ID";
     private static UUID mChangedCrimeID = null;
 
     private RecyclerView mCrimeRecyclerView;
@@ -175,9 +175,8 @@ public class CrimeListFragment extends Fragment
             Toast.makeText(getActivity(), mCrime.getTitle() + " clicked!", Toast.LENGTH_SHORT).show();
 
             // From the list, pass in the selected view's crimeID.
-            Intent intent = CrimeActivity.getIntent(getActivity(), mCrime.getId()); // getActivity is possible since this is all within FragmentActivity
-//            startActivity(intent);
-            startActivityForResult(intent, REQUEST_CRIME_ID);  // A call back code to identify this particular intent call
+            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId()); // getActivity is possible since this is all within FragmentActivity
+            startActivity(intent);
         }
     }
 
@@ -195,18 +194,22 @@ public class CrimeListFragment extends Fragment
         // if updateUI was called by onCreate do 1, if onResume(), then refresh the list
         if (mAdapter == null)
         {
+            Log.d(LOG_TAG, "updateUI() mAdapter is null.");
             mAdapter = new CrimeAdapter(crimes);  //passes in a list of crime objects to CrimeAdapter
             //set the adapter for RecyclerView to use
             mCrimeRecyclerView.setAdapter(mAdapter);
         }
         else if (mChangedCrimeID != null)
         {
-            mAdapter.notifyItemChanged(crimes.indexOf(CrimeLab.getCrime(mChangedCrimeID)));  //notifies all observes that one or views has changed
+            Log.d(LOG_TAG, "The following crime has changed: " + CrimeLab.getCrime(mChangedCrimeID).getTitle());
+            mAdapter.notifyItemChanged(crimes.indexOf(CrimeLab.getCrime(mChangedCrimeID)));  //notifies all observes that one view has changed
         }
+        mAdapter.notifyDataSetChanged();
     }
 
     /**
-     * This method is called by the OS's ActivityManager once the class called via startActivityForResult(intent,request_code) leaves the stack
+     * This method is called by the OS's ActivityManager once the class called (usually) via
+     * startActivityForResult(intent,request_code) calls setResult(request_code, intent)
      *
      * @param callBackCode  This is the code used on the intent call that would identify it.
      * @param resultCode This is a generic settable status update of OK or Cancelled
@@ -220,12 +223,12 @@ public class CrimeListFragment extends Fragment
         if (resultCode != Activity.RESULT_OK)  //did it return ok or cancelled?
             return;
 
-        if (callBackCode == REQUEST_CRIME_ID)  //is this a callback from the CrimeFragment?
+        if (intent == null)
+            return;
+        else if (intent.hasExtra(CrimeFragment.ALTERED_CRIME))
         {
-            if (intent == null)
-                return;
-            else
-                mChangedCrimeID = (UUID) intent.getSerializableExtra(CHANGED_CRIME);
+            mChangedCrimeID = (UUID) intent.getSerializableExtra(CrimeFragment.ALTERED_CRIME);
         }
+
     }
 }

@@ -25,6 +25,7 @@ This repository will hold a series of apps, each demonstrating a feature(s) of a
 </li>
 <li>
 	<b>Criminal Intent (work on-going...)</b>
+	<br/>- update v1.5 - Added ActivityPager so now the ui can be swiped from left to right without going back to the list.
 	<br/>- update v1.4 - Refined the use of viewHolder and RecyclerView. I've added the adapter so one item 
 	in the list refreshes when a change to a crime has occured. Bundles and args are also used explicitly over 
 	savedInstanceState to improve maintainability in 5 years where changes could lead to mistakes.

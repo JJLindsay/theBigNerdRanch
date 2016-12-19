@@ -30,7 +30,7 @@ public abstract class SingleFragmentActivity extends FragmentActivity
         //if there is a fragment in this view, use it. Otherwise, ask for a fragment.
         Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);  //to retrieve the crimeFragment ask by container view id
 
-        if (fragment == null)  //if fragment has never been created or if it has and the app has since been fully closed
+        if (fragment == null)  //if fragment has not been created
         {
             fragment = createFragment();  //get a fragment from a child class
             //add the fragment to the empty layout in the view.
