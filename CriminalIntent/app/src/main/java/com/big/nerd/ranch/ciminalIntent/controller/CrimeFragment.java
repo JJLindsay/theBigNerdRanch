@@ -1,24 +1,23 @@
 package com.big.nerd.ranch.ciminalIntent.controller;
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.test.ActivityInstrumentationTestCase2;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
+import android.widget.*;
 import com.big.nerd.ranch.ciminalIntent.R;
 import com.big.nerd.ranch.ciminalIntent.model.Crime;
 import com.big.nerd.ranch.ciminalIntent.model.CrimeLab;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -37,29 +36,16 @@ import java.util.UUID;
  */
 public class CrimeFragment extends Fragment
 {
+    public static final String ALTERED_CRIME = "com.big.nerd.ranch.ALTERED_CRIME";
+
     private static final String LOG_TAG = CrimeFragment.class.getSimpleName();
     private static final String ARG_CRIME_ID = "crime_id";
-    public static final String ALTERED_CRIME = "com.big.nerd.ranch.ALTERED_CRIME";
+    private static final String DIALOG_DATE = "DialogDate";
+    private static final int REQUEST_DATE = 0xA2;
     private Crime mCrime;
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
-
-    /**
-     * In order to display the view, we need a ensure we have a crime object first.
-     * This method is used for preliminary setup before we can work with the view.
-     * NOTE: see newInstance for why not intent.getExtras(...)
-     * @param savedInstanceState
-     */
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        //Create a crime object
-        // Look in the shared parent: Fragment for the Bundle and get its args
-        UUID crimeID = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
-        mCrime = CrimeLab.getCrime(crimeID);
-    }
 
     /**
      * Call this when ready to display a detailed Crime.
@@ -83,6 +69,22 @@ public class CrimeFragment extends Fragment
     }
 
     /**
+     * In order to display the view, we need a ensure we have a crime object first.
+     * This method is used for preliminary setup before we can work with the view.
+     * NOTE: see newInstance for why not intent.getExtras(...)
+     * @param savedInstanceState
+     */
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        //Create a crime object
+        // Look in the shared parent: Fragment for the Bundle and get its args
+        UUID crimeID = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
+        mCrime = CrimeLab.getCrime(crimeID);
+    }
+
+    /**
      * This is where the wiring that normally happens in onCreate(...) for Activity takes place
      *
      * @param inflater The layout to be inflated
@@ -101,9 +103,9 @@ public class CrimeFragment extends Fragment
 
         mTitleField.setText(mCrime.getTitle());
         mSolvedCheckBox.setChecked(mCrime.isSolved());
-        mDateButton.setText(mCrime.getDate().toString());
-        mDateButton.setEnabled(false);
+        updateDate();
 
+        mDateButton.setOnClickListener(new DateClickedListener());
         mTitleField.addTextChangedListener(new TextChangedListener());
         mSolvedCheckBox.setOnCheckedChangeListener(new CheckBoxChangedListener());
 
@@ -149,13 +151,54 @@ public class CrimeFragment extends Fragment
         }
     }
 
+    public class DateClickedListener implements View.OnClickListener
+    {
+        @Override
+        public void onClick(View view)
+        {
+            FragmentManager fragmentManager = getFragmentManager();
+            DatePickerFragment datePickerFragment = DatePickerFragment.newInstance(mCrime.getDate());
+            datePickerFragment.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
+            datePickerFragment.show(fragmentManager, DIALOG_DATE);
+        }
+    }
+
+    private void updateDate()
+    {
+        mDateButton.setText(mCrime.getFormattedDate());
+    }
+
+    /**
+     * DateFragment will call back results here
+     * @param requestCode
+     * @param resultCode
+     * @param carrierData  An intent just for carrying data
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent carrierData)
+    {
+        if (resultCode != Activity.RESULT_OK)
+            return;
+
+        if (requestCode == REQUEST_DATE)
+        {
+            Date date = (Date) carrierData.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            mCrime.setDate(date);
+            updateDate();
+            reportPropertyChanged();
+        }
+
+    }
+
     /**
      * Reports back if a change has taken place on this fragment
      */
     private void reportPropertyChanged()
     {
-        Intent intent = new Intent();
-        intent.putExtra(ALTERED_CRIME, mCrime.getId());
-        getActivity().setResult(Activity.RESULT_OK, intent);  //there are two standard responses: result_ok and result_cancelled. Intent optional
+        Intent carrierIntent = new Intent();  //an intent just for carrying extras
+        carrierIntent.putExtra(ALTERED_CRIME, mCrime.getId());
+        getActivity().setResult(Activity.RESULT_OK, carrierIntent);
+        //It's best not to hardcode new Class(), only go as far as getTargetFragment(). See DatePickerFragment.java
+//        new CrimeListFragment().onActivityResult(CrimeListFragment.CHANGED_CRIME, Activity.RESULT_OK, carrierIntent);
     }
 }

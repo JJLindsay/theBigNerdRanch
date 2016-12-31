@@ -36,8 +36,8 @@ import java.util.UUID;
 public class CrimeListFragment extends Fragment
 {
     private static final String LOG_TAG = CrimeListFragment.class.getSimpleName();
-    private static final int REQUEST_CRIME_ID = 0xA1;  //this should be known only by the recipient and it is how communication is handled.
-    private static final String CHANGED_CRIME = "com.big.nerd.ranch.CRIME_ID";
+    public static final int CHANGED_CRIME = 0xA1;  //this should be known only by the recipient and it is how communication is handled.
+//    private static final String CHANGED_CRIME = "com.big.nerd.ranch.CRIME_ID";
     private static UUID mChangedCrimeID = null;
 
     private RecyclerView mCrimeRecyclerView;
@@ -165,7 +165,7 @@ public class CrimeListFragment extends Fragment
         {
             mCrime = crime;
             mTitleTextView.setText(mCrime.getTitle());
-            mDateTextView.setText(mCrime.getDate());
+            mDateTextView.setText(mCrime.getFormattedDate());
             mSolvedCheckBox.setChecked(mCrime.isSolved());
         }
 
@@ -208,27 +208,24 @@ public class CrimeListFragment extends Fragment
     }
 
     /**
-     * This method is called by the OS's ActivityManager once the class called (usually) via
-     * startActivityForResult(intent,request_code) calls setResult(request_code, intent)
+     * This is called explicitly by another Fragment. Usually this would be done by the ActivityManager via
+     * startActivityForResult(intent,request_code) and setResult(request_code, intent) before returning. However,
+     * for Fragment-to-Fragment communication, its ok to call on this class explicitly.
      *
-     * @param callBackCode  This is the code used on the intent call that would identify it.
+     * @param requestCode  This is the code used on the intent call that would identify it.
      * @param resultCode This is a generic settable status update of OK or Cancelled
-     * @param intent holds the extras
+     * @param carrierIntent holds the extras
      */
     @Override
-    public void onActivityResult(int callBackCode, int resultCode, Intent intent)
+    public void onActivityResult(int requestCode, int resultCode, Intent carrierIntent)
     {
         Log.d(LOG_TAG, "onActivityResult() called");
 
-        if (resultCode != Activity.RESULT_OK)  //did it return ok or cancelled?
+        if (resultCode != Activity.RESULT_OK)
             return;
 
-        if (intent == null)
-            return;
-        else if (intent.hasExtra(CrimeFragment.ALTERED_CRIME))
-        {
-            mChangedCrimeID = (UUID) intent.getSerializableExtra(CrimeFragment.ALTERED_CRIME);
-        }
-
+//        if (identifyingCode == CHANGED_CRIME)
+        if (carrierIntent != null && carrierIntent.hasExtra(CrimeFragment.ALTERED_CRIME))
+            mChangedCrimeID = (UUID) carrierIntent.getSerializableExtra(CrimeFragment.ALTERED_CRIME);
     }
 }

@@ -1,7 +1,5 @@
 package com.big.nerd.ranch.ciminalIntent.model;
 
-
-
 import android.text.format.DateFormat;
 
 import java.util.Date;
@@ -23,12 +21,14 @@ public class Crime
     private UUID mId;
     private String mTitle;
     private String mDateFormat;
+    private Date mDate;
     private boolean mSolved;
 
     public Crime()
     {
+        mDateFormat = null;
         mId = UUID.randomUUID();
-        mDateFormat = DateFormat.format("EEEE, MMM dd, yyyy", new Date()).toString();
+        mDate = new Date();
     }
 
     public UUID getId()
@@ -46,14 +46,20 @@ public class Crime
         mTitle = title;
     }
 
-    public String getDate()
+    public String getFormattedDate()
     {
+        mDateFormat = DateFormat.format("EEEE, MMM dd, yyyy", mDate).toString();
         return mDateFormat;
     }
 
-    public void setDate(Date date)
+    public Date getDate()
     {
-        mDateFormat = DateFormat.format("EEEE, MMM dd, yyyy", date).toString();
+        return mDate;
+    }
+
+    public void setDate(Date newDate)
+    {
+        mDate = newDate;
     }
 
     public boolean isSolved()

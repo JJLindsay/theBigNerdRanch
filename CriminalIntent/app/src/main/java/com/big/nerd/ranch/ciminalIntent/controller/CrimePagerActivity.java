@@ -23,8 +23,8 @@ import java.util.UUID;
  * To format code = ctrl + alt + L
  * To run class = ctrl +  shift + F10
  *
- * This class differs from CrimeFragment in that the user can now swipe to see the next crime.
- * Going back to the CrimeListFragment is no longer required to achieve this.
+ * This class differs from CrimeActivity in that the user can now swipe to see the next crime.
+ * Going back to the CrimeListFragment is no longer required to access the next crime.
  */
 public class CrimePagerActivity extends FragmentActivity
 {
@@ -34,7 +34,7 @@ public class CrimePagerActivity extends FragmentActivity
     private ViewPager mViewPager;
     private List<Crime> mCrimes;
 
-    public static Intent newIntent(Context packageContext, UUID crimeID)
+    protected static Intent newIntent(Context packageContext, UUID crimeID)
     {
         Intent intent = new Intent(packageContext, CrimePagerActivity.class);
         intent.putExtra(EXTRA_CRIME_ID, crimeID);
@@ -75,8 +75,7 @@ public class CrimePagerActivity extends FragmentActivity
             }
         });
 
+        //Set the Crime Fragment to display.
         mViewPager.setCurrentItem(mCrimes.indexOf(CrimeLab.getCrime(crimeID)));
     }
-
-
 }

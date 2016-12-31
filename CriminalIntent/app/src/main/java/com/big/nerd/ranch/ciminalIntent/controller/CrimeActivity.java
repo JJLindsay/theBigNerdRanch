@@ -21,10 +21,15 @@ import java.util.UUID;
  * Sets a fragment in the empty xml.
  *
  * I need an activity with space for a fragment. My fragment is a detailed crime fragment.
+ *
+ *
+ * (!!!!!) ATTENTION(!!!!)
+ *
+ * THIS CLASS WAS REPLACED BY CrimePageActivity.java
  */
 public class CrimeActivity extends SingleFragmentActivity
 {
-    private static final String EXTRA_CRIME_ID = "com.big.nerd.ranch.ciminalIntent.crime_id";
+    private static final String EXTRA_CRIME_ID = "com.big.nerd.ranch.ciminalIntent.CRIME_ID";
 
     // Tell crimeFragment which crime to display via crimeID in intent exta
     public static Intent getIntent(Context packageContext, UUID crimeID)
