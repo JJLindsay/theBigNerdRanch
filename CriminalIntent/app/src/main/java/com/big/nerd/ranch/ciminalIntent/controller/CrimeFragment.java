@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.test.ActivityInstrumentationTestCase2;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -17,7 +16,7 @@ import com.big.nerd.ranch.ciminalIntent.R;
 import com.big.nerd.ranch.ciminalIntent.model.Crime;
 import com.big.nerd.ranch.ciminalIntent.model.CrimeLab;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.UUID;
 
 /**
@@ -39,13 +38,17 @@ public class CrimeFragment extends Fragment
     public static final String ALTERED_CRIME = "com.big.nerd.ranch.ALTERED_CRIME";
 
     private static final String LOG_TAG = CrimeFragment.class.getSimpleName();
-    private static final String ARG_CRIME_ID = "crime_id";
-    private static final String DIALOG_DATE = "DialogDate";
+    private static final String ARG_CRIME_ID = "Crime_ID";
+    private static final String DIALOG_DATE = "Dialog_Date";
+    private static final String DIALOG_TIME = "Dialog_Time";
     private static final int REQUEST_DATE = 0xA2;
+    private static final int REQUEST_TIME = 0xA3;
+
     private Crime mCrime;
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
+    private Button mTimeButton;
 
     /**
      * Call this when ready to display a detailed Crime.
@@ -99,13 +102,15 @@ public class CrimeFragment extends Fragment
 
         mTitleField = (EditText) fragmentCrimeView.findViewById(R.id.crime_title);
         mDateButton = (Button) fragmentCrimeView.findViewById(R.id.crime_date);
+        mTimeButton = (Button) fragmentCrimeView.findViewById(R.id.crime_time);
         mSolvedCheckBox = (CheckBox) fragmentCrimeView.findViewById(R.id.crime_solved);
 
         mTitleField.setText(mCrime.getTitle());
         mSolvedCheckBox.setChecked(mCrime.isSolved());
-        updateDate();
+        updateDateTimeUI();
 
         mDateButton.setOnClickListener(new DateClickedListener());
+        mTimeButton.setOnClickListener(new TimeClickedListener());
         mTitleField.addTextChangedListener(new TextChangedListener());
         mSolvedCheckBox.setOnCheckedChangeListener(new CheckBoxChangedListener());
 
@@ -157,15 +162,28 @@ public class CrimeFragment extends Fragment
         public void onClick(View view)
         {
             FragmentManager fragmentManager = getFragmentManager();
-            DatePickerFragment datePickerFragment = DatePickerFragment.newInstance(mCrime.getDate());
+            DatePickerFragment datePickerFragment = DatePickerFragment.newInstance(mCrime.getCalendar());
             datePickerFragment.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
-            datePickerFragment.show(fragmentManager, DIALOG_DATE);
+            datePickerFragment.show(fragmentManager, DIALOG_DATE);  //id for fm to organize its fragments
         }
     }
 
-    private void updateDate()
+    public class TimeClickedListener implements View.OnClickListener
+    {
+        @Override
+        public void onClick(View view)
+        {
+            FragmentManager fragmentManager = getFragmentManager();
+            TimePickerFragment timePickerFragment = TimePickerFragment.newInstance(mCrime.getCalendar());
+            timePickerFragment.setTargetFragment(CrimeFragment.this, REQUEST_TIME);
+            timePickerFragment.show(fragmentManager, DIALOG_TIME); //id for fm to organize its fragments
+        }
+    }
+
+    private void updateDateTimeUI()
     {
         mDateButton.setText(mCrime.getFormattedDate());
+        mTimeButton.setText(mCrime.getFormattedTime());
     }
 
     /**
@@ -180,11 +198,19 @@ public class CrimeFragment extends Fragment
         if (resultCode != Activity.RESULT_OK)
             return;
 
-        if (requestCode == REQUEST_DATE)
+        Calendar calendar;
+        if (requestCode == REQUEST_TIME)
         {
-            Date date = (Date) carrierData.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
-            mCrime.setDate(date);
-            updateDate();
+            calendar = (Calendar) carrierData.getSerializableExtra(TimePickerFragment.EXTRA_CALENDAR);
+            mCrime.setCalendar(calendar);
+            updateDateTimeUI();
+            reportPropertyChanged();
+        }
+        else if (requestCode == REQUEST_DATE)
+        {
+            calendar = (Calendar) carrierData.getSerializableExtra(DatePickerFragment.EXTRA_CALENDAR);
+            mCrime.setCalendar(calendar);
+            updateDateTimeUI();
             reportPropertyChanged();
         }
 

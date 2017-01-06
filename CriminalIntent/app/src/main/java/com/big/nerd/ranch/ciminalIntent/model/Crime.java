@@ -1,7 +1,7 @@
 package com.big.nerd.ranch.ciminalIntent.model;
 
-import android.text.format.DateFormat;
-
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -20,15 +20,20 @@ public class Crime
     //UUID is a 'Universally Unique ID' which will be used for each crime.
     private UUID mId;
     private String mTitle;
-    private String mDateFormat;
     private Date mDate;
     private boolean mSolved;
+    private Calendar mCalendar;
+    private SimpleDateFormat mDateFormat;
 
     public Crime()
     {
-        mDateFormat = null;
+        mDateFormat = null;  //for formatting the date and time
         mId = UUID.randomUUID();
-        mDate = new Date();
+        mDate = new Date();  //for displaying the date
+        mCalendar = Calendar.getInstance();  //for displaying the time
+
+        mDate.setTime(System.currentTimeMillis());
+        mCalendar.setTime(mDate);
     }
 
     public UUID getId()
@@ -48,8 +53,8 @@ public class Crime
 
     public String getFormattedDate()
     {
-        mDateFormat = DateFormat.format("EEEE, MMM dd, yyyy", mDate).toString();
-        return mDateFormat;
+        mDateFormat = new SimpleDateFormat("EEEE, MMMMM dd, yyyy");
+        return mDateFormat.format(mDate.getTime());
     }
 
     public Date getDate()
@@ -59,7 +64,8 @@ public class Crime
 
     public void setDate(Date newDate)
     {
-        mDate = newDate;
+        mDate = newDate; //new dates should have a time included
+        mCalendar.setTime(mDate);
     }
 
     public boolean isSolved()
@@ -70,5 +76,22 @@ public class Crime
     public void setSolved(boolean solved)
     {
         mSolved = solved;
+    }
+
+    public Calendar getCalendar()
+    {
+        return mCalendar;
+    }
+
+    public void setCalendar(Calendar calendar)
+    {
+        mDate = calendar.getTime(); //new dates should have a time included
+        mCalendar = calendar;
+    }
+
+    public String getFormattedTime()
+    {
+        mDateFormat = new SimpleDateFormat("HH:mm aaa");
+        return mDateFormat.format(mDate.getTime());
     }
 }
