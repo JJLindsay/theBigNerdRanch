@@ -4,10 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import com.big.nerd.ranch.ciminalIntent.R;
 import com.big.nerd.ranch.ciminalIntent.model.Crime;
 import com.big.nerd.ranch.ciminalIntent.model.CrimeLab;
@@ -26,7 +26,7 @@ import java.util.UUID;
  * This class differs from CrimeActivity in that the user can now swipe to see the next crime.
  * Going back to the CrimeListFragment is no longer required to access the next crime.
  */
-public class CrimePagerActivity extends FragmentActivity
+public class CrimePagerActivity extends AppCompatActivity
 {
     //the ID of the crime that should be on the screen.
     private static final String EXTRA_CRIME_ID = "com.big.nerd.ranch.criminalIntent.CRIME_ID";
@@ -38,6 +38,7 @@ public class CrimePagerActivity extends FragmentActivity
     {
         Intent intent = new Intent(packageContext, CrimePagerActivity.class);
         intent.putExtra(EXTRA_CRIME_ID, crimeID);
+
         return intent;
     }
 
@@ -48,8 +49,6 @@ public class CrimePagerActivity extends FragmentActivity
         setContentView(R.layout.activity_crime_pager);
 
         UUID crimeID = (UUID) getIntent().getSerializableExtra(EXTRA_CRIME_ID);
-
-
         mViewPager = (ViewPager) findViewById(R.id.activity_crime_pager_view_pager);
 
         mCrimes = CrimeLab.getInstance(this).getCrimes();
@@ -57,7 +56,6 @@ public class CrimePagerActivity extends FragmentActivity
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager)
         {
             /**
-             *
              * @param position The index in the list of the crime.
              * @return
              */
@@ -71,10 +69,15 @@ public class CrimePagerActivity extends FragmentActivity
             @Override
             public int getCount()
             {
+                if (CrimeLab.isCrimeRemoved())
+                {
+                    CrimeLab.resetCrimeRemovedFlag();
+                    notifyDataSetChanged();
+                }
+
                 return mCrimes.size();
             }
         });
-
         //Set the Crime Fragment to display.
         mViewPager.setCurrentItem(mCrimes.indexOf(CrimeLab.getCrime(crimeID)));
     }

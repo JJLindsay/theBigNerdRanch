@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import com.big.nerd.ranch.ciminalIntent.R;
 
 /**
@@ -16,7 +17,7 @@ import com.big.nerd.ranch.ciminalIntent.R;
  *
  * This class allows any class that inherits it, to add their Fragment to an empty layout
  */
-public abstract class SingleFragmentActivity extends FragmentActivity
+public abstract class SingleFragmentActivity extends AppCompatActivity
 {
     protected abstract Fragment createFragment();
 

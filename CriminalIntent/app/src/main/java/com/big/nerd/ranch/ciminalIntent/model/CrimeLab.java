@@ -19,8 +19,10 @@ import java.util.UUID;
  */
 public class CrimeLab
 {
+    //Singleton constructor
     private static CrimeLab sCrimeLab;
     private static List<Crime> sCrimes;
+    private static int sCrimeRemovedFlag;
 
     public static CrimeLab getInstance(Context context){
         if (sCrimeLab == null){
@@ -30,13 +32,13 @@ public class CrimeLab
     }
 
     private CrimeLab(Context context){
-        sCrimes = new ArrayList<Crime>();
-        for (int i = 0; i < 100; i++){
+        sCrimes = new ArrayList<Crime>();  //arraylist makes it possible to remove without leaving pockets for crimePagerActivity
+/*        for (int i = 0; i < 100; i++){
             Crime crime = new Crime();
             crime.setTitle("Crime #" + i);
             crime.setSolved(i%2 == 0);  //every other one
             sCrimes.add(crime);
-        }
+        }*/
     }
 
     /**
@@ -61,5 +63,26 @@ public class CrimeLab
                 return crime;
         }
         return null;
+    }
+
+    public void addCrime(Crime crime)
+    {
+        sCrimes.add(crime);
+    }
+
+    public void removeCrime(Crime crime)
+    {
+        sCrimeRemovedFlag = 1;
+        sCrimes.remove(crime);
+    }
+
+    public static boolean isCrimeRemoved()
+    {
+        return 1 == sCrimeRemovedFlag;
+    }
+
+    public static void resetCrimeRemovedFlag()
+    {
+        sCrimeRemovedFlag =0;
     }
 }

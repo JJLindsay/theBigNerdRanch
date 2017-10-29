@@ -3,6 +3,7 @@ package com.big.nerd.ranch.ciminalIntent.controller;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import com.big.nerd.ranch.ciminalIntent.common.SingleFragmentActivity;
 
 import java.util.UUID;
@@ -30,6 +31,8 @@ import java.util.UUID;
 public class CrimeActivity extends SingleFragmentActivity
 {
     private static final String EXTRA_CRIME_ID = "com.big.nerd.ranch.ciminalIntent.CRIME_ID";
+    private static final String LOG_TAG = CrimeActivity.class.getSimpleName();
+
 
     // Tell crimeFragment which crime to display via crimeID in intent exta
     public static Intent getIntent(Context packageContext, UUID crimeID)
@@ -43,6 +46,7 @@ public class CrimeActivity extends SingleFragmentActivity
     protected Fragment createFragment()
     {
         UUID crimeID = (UUID) getIntent().getSerializableExtra(EXTRA_CRIME_ID);
-        return CrimeFragment.newInstance(crimeID);
+        //return CrimeFragment.newInstance(crimeID);
+        return null;
     }
 }

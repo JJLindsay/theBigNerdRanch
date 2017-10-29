@@ -11,7 +11,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import com.big.nerd.ranch.ciminalIntent.R;
 import com.big.nerd.ranch.ciminalIntent.model.Crime;
 import com.big.nerd.ranch.ciminalIntent.model.CrimeLab;
@@ -36,19 +39,23 @@ import java.util.UUID;
 public class CrimeFragment extends Fragment
 {
     public static final String ALTERED_CRIME = "com.big.nerd.ranch.ALTERED_CRIME";
+    public static final String DELETE_CRIME = "com.big.nerd.ranch.DELETE_CRIME";
 
     private static final String LOG_TAG = CrimeFragment.class.getSimpleName();
     private static final String ARG_CRIME_ID = "Crime_ID";
     private static final String DIALOG_DATE = "Dialog_Date";
     private static final String DIALOG_TIME = "Dialog_Time";
+    private static final String DIALOG_DELETE = "Dialog_Delete";
     private static final int REQUEST_DATE = 0xA2;
     private static final int REQUEST_TIME = 0xA3;
+    private static final int REQUEST_DELETE = 0xA4;
 
     private Crime mCrime;
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
     private Button mTimeButton;
+    private Button mDelete;
 
     /**
      * Call this when ready to display a detailed Crime.
@@ -104,6 +111,7 @@ public class CrimeFragment extends Fragment
         mDateButton = (Button) fragmentCrimeView.findViewById(R.id.crime_date);
         mTimeButton = (Button) fragmentCrimeView.findViewById(R.id.crime_time);
         mSolvedCheckBox = (CheckBox) fragmentCrimeView.findViewById(R.id.crime_solved);
+        mDelete = (Button) fragmentCrimeView.findViewById(R.id.crime_delete);
 
         mTitleField.setText(mCrime.getTitle());
         mSolvedCheckBox.setChecked(mCrime.isSolved());
@@ -113,6 +121,7 @@ public class CrimeFragment extends Fragment
         mTimeButton.setOnClickListener(new TimeClickedListener());
         mTitleField.addTextChangedListener(new TextChangedListener());
         mSolvedCheckBox.setOnCheckedChangeListener(new CheckBoxChangedListener());
+        mDelete.setOnClickListener(new DeleteClickedListener());
 
         return fragmentCrimeView;
     }
@@ -123,15 +132,12 @@ public class CrimeFragment extends Fragment
         public void beforeTextChanged(CharSequence s, int start, int count, int after)
         {
             //TODO
-            Log.d(LOG_TAG, "Before text has changed state.");
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count)
         {
             mCrime.setTitle(s.toString());
-            Log.d(LOG_TAG, "Text has changed state.");
-
             reportPropertyChanged();
         }
 
@@ -139,7 +145,6 @@ public class CrimeFragment extends Fragment
         public void afterTextChanged(Editable editable)
         {
             //TODO
-            Log.d(LOG_TAG, "After text has changed state.");
         }
     }
 
@@ -150,8 +155,6 @@ public class CrimeFragment extends Fragment
         {
             //Set the Crime's solved property
             mCrime.setSolved(isChecked);
-            Log.d(LOG_TAG, "check box changed state.");
-
             reportPropertyChanged();
         }
     }
@@ -177,6 +180,18 @@ public class CrimeFragment extends Fragment
             TimePickerFragment timePickerFragment = TimePickerFragment.newInstance(mCrime.getCalendar());
             timePickerFragment.setTargetFragment(CrimeFragment.this, REQUEST_TIME);
             timePickerFragment.show(fragmentManager, DIALOG_TIME); //id for fm to organize its fragments
+        }
+    }
+
+    public class DeleteClickedListener implements View.OnClickListener
+    {
+        @Override
+        public void onClick(View view)
+        {
+            FragmentManager fragmentManager = getFragmentManager();
+            DeleteAlertFragment deleteAlertFragment = DeleteAlertFragment.newInstance();
+            deleteAlertFragment.setTargetFragment(CrimeFragment.this, REQUEST_DELETE);
+            deleteAlertFragment.show(fragmentManager, DIALOG_DELETE);  //id for fm to organize its fragments
         }
     }
 
@@ -213,7 +228,10 @@ public class CrimeFragment extends Fragment
             updateDateTimeUI();
             reportPropertyChanged();
         }
-
+        else if (requestCode == REQUEST_DELETE)
+        {
+            reportDeleteCrime();
+        }
     }
 
     /**
@@ -224,7 +242,44 @@ public class CrimeFragment extends Fragment
         Intent carrierIntent = new Intent();  //an intent just for carrying extras
         carrierIntent.putExtra(ALTERED_CRIME, mCrime.getId());
         getActivity().setResult(Activity.RESULT_OK, carrierIntent);
-        //It's best not to hardcode new Class(), only go as far as getTargetFragment(). See DatePickerFragment.java
-//        new CrimeListFragment().onActivityResult(CrimeListFragment.CHANGED_CRIME, Activity.RESULT_OK, carrierIntent);
+    }
+
+    /**
+     * Reports back if a delete crime request has occurred on this fragment
+     *
+     * NOTE!
+     * Another option is to record the crime to delete after disabling the buttons and delete the crime only when
+     * updateUI is called but what happens if the user closes the app after deleting and does not go to updateUI???
+     */
+    private void reportDeleteCrime()
+    {
+        final CrimeListFragment fCrimeListFragment = new CrimeListFragment();
+
+        Intent carrierIntent = new Intent(getActivity(), CrimeListActivity.class);  //an intent just for carrying extras
+        carrierIntent.putExtra(DELETE_CRIME, mCrime.getId());
+
+        mTitleField.setEnabled(false);
+        mDateButton.setEnabled(false);
+        mTimeButton.setEnabled(false);
+        mSolvedCheckBox.setEnabled(false);
+        mDelete.setEnabled(false);
+
+        fCrimeListFragment.onActivityResult(0, Activity.RESULT_OK, carrierIntent);  //NOTE: This is DIFFERENT from
+        startActivity(carrierIntent);
+    }
+
+    @Override
+    public void onPause()
+    {
+        Log.d(LOG_TAG, "onPause() called");
+
+        CrimeListFragment fCrimeListFragment = new CrimeListFragment();
+        Intent carrierIntent = new Intent(getActivity(), CrimeListActivity.class);  //an intent just for carrying extras
+        carrierIntent.putExtra(DELETE_CRIME, mCrime.getId());
+
+        if (mTitleField.getText().toString() == null || mTitleField.getText().toString().trim().isEmpty())
+            fCrimeListFragment.onActivityResult(0, Activity.RESULT_OK, carrierIntent);
+
+        super.onPause();
     }
 }

@@ -13,8 +13,6 @@ import android.widget.DatePicker;
 import com.big.nerd.ranch.ciminalIntent.R;
 
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 /**
  * To comment out a line = ctrl + (keypad /)

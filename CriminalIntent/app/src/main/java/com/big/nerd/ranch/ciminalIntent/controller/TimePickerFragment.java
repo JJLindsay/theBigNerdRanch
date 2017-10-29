@@ -21,6 +21,7 @@ import java.util.Calendar;
  * To remove unused imports = ctrl + alt + o
  * To format code = ctrl + alt + L
  * To run class = ctrl +  shift + F10
+ * Finds the next occurrence of the currently selected text = ctrl + F3
  *
  * This class inflates a support TimePicker in a new Fragment.
  * If the user enters a new time, this is sent back to CrimeFragment.
@@ -30,6 +31,7 @@ public class TimePickerFragment extends DialogFragment
     public static final String EXTRA_CALENDAR = "com.big.nerd.ranch.criminalIntent.TimePickerFragment.CALENDER";
 
     private static final String ARG_CALENDAR = "CALENDAR";
+
 
     private TimePicker mTimePicker;
     private Calendar mCalendar;
@@ -71,6 +73,11 @@ public class TimePickerFragment extends DialogFragment
      */
     class TimePickerChangedListener implements DialogInterface.OnClickListener
     {
+        /**
+         * If the user clicks on in the dialog box
+         * @param dialogInterface  ???
+         * @param i  ???
+         */
         @Override
         public void onClick(DialogInterface dialogInterface, int i)
         {

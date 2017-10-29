@@ -25,6 +25,7 @@ This repository will hold a series of apps, each demonstrating a feature(s) of a
 </li>
 <li>
 	<b>Criminal Intent (work on-going...)</b>
+	<br/>- update v1.8 - Added a delete button for PagerActivity to delete fragments and update the list and pager feature.
 	<br/>- update v1.7 - Added a new TimePicker button and adjusted the xml weight property.
 	<br/>- update v1.6 - The user can now alter the date of the crime and the result is passed back to the crime and the list is refreshed. This update also shows Fragments communicating which is different when an Activity is involved. 
 	<br/>- update v1.5 - Added ActivityPager so now the ui can be swiped from left to right without going back to the list.
@@ -46,4 +47,9 @@ This repository will hold a series of apps, each demonstrating a feature(s) of a
 <br/>
 <br/>
 <br/>
-A few important defintions:
+Noted bugs:
+<ul>
+	<li>
+		(FIXED) Timepicker points to whatever the recored time is but it doesn't highlight am/pm when chosing.
+	</li>
+</ul>
